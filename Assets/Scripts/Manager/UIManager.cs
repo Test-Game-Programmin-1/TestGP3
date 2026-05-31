@@ -13,17 +13,12 @@ public class UIManager : MonoBehaviour
         }
             instance = this;
     }
-
-    public void QuitGame()
-    {
-        Application.Quit();
-    }
     public void MainMenu()
     {
         SceneManager.LoadScene("MainMenu");
     }
-    public void X2()
+    public void reload()
     {
-        GameManager.instance.state = GameState.X2;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

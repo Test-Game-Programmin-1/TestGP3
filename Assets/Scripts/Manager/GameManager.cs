@@ -34,4 +34,16 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 2;
         }
     }
+    public void X2()
+    {
+        state = GameState.X2;
+    }
+    public void Pause()
+    {
+        state = GameState.Paused;
+    }
+    public void Playing()
+    {
+        state = GameState.Playing;
+    }
 }
