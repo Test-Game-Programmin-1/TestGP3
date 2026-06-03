@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
             instance = this;
         state = GameState.Playing;
     }
-    void OnEnable()
+    void Update()
     {
         if(state == GameState.Paused)
         {
@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
         }
         else if(state == GameState.X2)
         {
-            Time.timeScale = 2;
+            Time.timeScale = 5;
         }
     }
     public void X2()
