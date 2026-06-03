@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 public enum BT_WORKINGSTATUS
@@ -7,14 +8,17 @@ public enum BT_WORKINGSTATUS
 }
 public class BT_CONTROLLER : MonoBehaviour
 {
+    [Header("Points")]
     [SerializeField] Transform start;
     [SerializeField] Transform work;
     [SerializeField] Transform EXPEDITION;
     [SerializeField] Transform sleep;
+
     BT_WORKINGSTATUS workingStatus = BT_WORKINGSTATUS.idle;
     BT_ROOT root;
     NavMeshAgent Agent;
     BT_STATUS TREESTATUS = BT_STATUS.RUNNING;
+    public static event Action OnGetTheOrder;
     void Start()
     {
         Agent = GetComponent<NavMeshAgent>();
@@ -59,12 +63,12 @@ public class BT_CONTROLLER : MonoBehaviour
             Agent.SetDestination(Destination);
             workingStatus = BT_WORKINGSTATUS.working;
         }
-        else if(Vector3.SqrMagnitude(Agent.pathEndPosition - Destination) >= 3)
+        else if(Vector3.SqrMagnitude(Agent.pathEndPosition - Destination) >= 0.1f)
         {
             workingStatus = BT_WORKINGSTATUS.idle;
             return BT_STATUS.FAILURE;
         }
-        else if(Vector3.SqrMagnitude(Destination - transform.position) < 3)
+        else if(Vector3.SqrMagnitude(Destination - transform.position) < 0.1f)
         {
             workingStatus = BT_WORKINGSTATUS.idle;
             return BT_STATUS.SUCCESS;
@@ -77,6 +81,7 @@ public class BT_CONTROLLER : MonoBehaviour
     }
     private BT_STATUS GetTheOrder()
     {
+        OnGetTheOrder?.Invoke();
         return BT_STATUS.SUCCESS;
     }
     private BT_STATUS GetMat()
@@ -103,5 +108,4 @@ public class BT_CONTROLLER : MonoBehaviour
     {
         return BT_STATUS.SUCCESS;
     }
-
 }
