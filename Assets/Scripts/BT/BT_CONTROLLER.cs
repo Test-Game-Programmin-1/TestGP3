@@ -18,13 +18,21 @@ public class BT_CONTROLLER : MonoBehaviour
     [SerializeField] Transform[] Chest;
     [SerializeField] Transform[] Warehouse;
 
+    [Header("sleep")]
+    [SerializeField] bool isSleeping = true;
+    [SerializeField] float Energy;
+    [SerializeField] float MaxEnergy;
+
     BT_WORKINGSTATUS workingStatus = BT_WORKINGSTATUS.idle;
     BT_ROOT root;
     NavMeshAgent Agent;
     BT_STATUS TREESTATUS = BT_STATUS.RUNNING;
     public static event Action OnGetTheOrder;
+    public static event Action OnCrafting;
+    public static event Action OnExpedition;
     void Start()
     {
+        Energy = MaxEnergy;
         Agent = GetComponent<NavMeshAgent>();
         root = new BT_ROOT("ROOT");
         BT_SEQE workingloop = new BT_SEQE("WORKINGLOOP");
@@ -58,6 +66,14 @@ public class BT_CONTROLLER : MonoBehaviour
         {
             root.CURRENTCHILD = 0;
             TREESTATUS = BT_STATUS.RUNNING;
+        }
+        if(isSleeping && Energy < MaxEnergy)
+        {
+            Energy += Time.deltaTime;
+        }
+        else if(!isSleeping && Energy > 0)
+        {
+            Energy -= Time.deltaTime;
         }
     }
     private BT_STATUS MoveTo(Vector3 Destination)
@@ -123,6 +139,7 @@ public class BT_CONTROLLER : MonoBehaviour
             BT_STATUS _GoToWork = MoveTo(work.position);
             if(_GoToWork == BT_STATUS.SUCCESS)           
             {
+                OnCrafting?.Invoke();
                 //aggiungere evento placing mat
                 hasMat = false;
                 RecipeManager.instance.currentMat++;
@@ -138,6 +155,7 @@ public class BT_CONTROLLER : MonoBehaviour
     private BT_STATUS GetTheOrder()
     {
         OnGetTheOrder?.Invoke();
+        isSleeping = false;
         RecipeManager.instance.currentMat = 0;
         return BT_STATUS.SUCCESS;
     }
@@ -151,11 +169,13 @@ public class BT_CONTROLLER : MonoBehaviour
     // }
     private BT_STATUS Expedition()
     {
+        OnExpedition?.Invoke();
         return MoveTo(EXPEDITION.position);
     }
     private BT_STATUS EnergyCheck()
     {
-        return BT_STATUS.SUCCESS;
+        if (Energy <= 2f){return BT_STATUS.FAILURE;}
+        else{return BT_STATUS.SUCCESS;}
     }
     private BT_STATUS GoToSleepFR()
     {
@@ -163,6 +183,8 @@ public class BT_CONTROLLER : MonoBehaviour
     }
     private BT_STATUS Recharging()
     {
-        return BT_STATUS.SUCCESS;
+        isSleeping = true;
+        if(Energy < MaxEnergy) return BT_STATUS.RUNNING;
+        else return BT_STATUS.SUCCESS;
     }
 }
