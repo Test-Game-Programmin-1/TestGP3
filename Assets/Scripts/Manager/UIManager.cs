@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
+    //public TextMesh[] OrderText;
     public static UIManager instance;
     void Awake()
     {

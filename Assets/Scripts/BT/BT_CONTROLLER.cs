@@ -8,11 +8,15 @@ public enum BT_WORKINGSTATUS
 }
 public class BT_CONTROLLER : MonoBehaviour
 {
+    [Header("Cheker")]
+    public bool hasMat = false;
     [Header("Points")]
     [SerializeField] Transform start;
     [SerializeField] Transform work;
     [SerializeField] Transform EXPEDITION;
     [SerializeField] Transform sleep;
+    [SerializeField] Transform[] Chest;
+    [SerializeField] Transform[] Warehouse;
 
     BT_WORKINGSTATUS workingStatus = BT_WORKINGSTATUS.idle;
     BT_ROOT root;
@@ -29,7 +33,7 @@ public class BT_CONTROLLER : MonoBehaviour
         BT_LEAF _GoToWork = new BT_LEAF("GOTOWORK", GoToWork);
         BT_LEAF _GetTheOrder = new BT_LEAF("GETTHEORDER", GetTheOrder);
         BT_LEAF _GetMat = new BT_LEAF("GETMAT", GetMat);
-        BT_LEAF _Crafting = new BT_LEAF("CRAFTING", Crafting);
+        //BT_LEAF _Crafting = new BT_LEAF("CRAFTING", Crafting);
         BT_LEAF _Expedition = new BT_LEAF("EXPEDITION", Expedition);
         BT_LEAF _EnergyCheck = new BT_LEAF("ENERGYCHECK", EnergyCheck);
         BT_LEAF _GoToSleepFR = new BT_LEAF("GOTOSLEEP", GoToSleepFR);
@@ -38,7 +42,7 @@ public class BT_CONTROLLER : MonoBehaviour
         workingloop.ADDCHILD(_GoToWork);
         workingloop.ADDCHILD(_GetTheOrder);
         workingloop.ADDCHILD(_GetMat);
-        workingloop.ADDCHILD(_Crafting);
+        //workingloop.ADDCHILD(_Crafting);
         workingloop.ADDCHILD(_Expedition);
         workingloop.ADDCHILD(EnergyController);
             EnergyController.ADDCHILD(_EnergyCheck);    
@@ -75,6 +79,58 @@ public class BT_CONTROLLER : MonoBehaviour
         }
         return BT_STATUS.RUNNING;
     }
+    private BT_STATUS MaterialCheck()
+    {
+        if(RecipeManager.instance.currentMat >= 3){return BT_STATUS.SUCCESS;}
+        if(RecipeManager.instance.MatNeeded[RecipeManager.instance.currentMat] == 0)
+        {
+            RecipeManager.instance.currentMat++;
+            return BT_STATUS.RUNNING;
+        }
+        if(!hasMat)
+        {
+            if(RecipeManager.instance.MatOwned[RecipeManager.instance.currentMat] < RecipeManager.instance.MatNeeded[RecipeManager.instance.currentMat])
+            {
+                int RefillMat = RecipeManager.instance.ChestMaxVolume - RecipeManager.instance.MatOwned[RecipeManager.instance.currentMat];
+                BT_STATUS _Warehouse = MoveTo(Warehouse[RecipeManager.instance.currentMat].position);
+                if (_Warehouse == BT_STATUS.SUCCESS)
+                {
+                    RecipeManager.instance.MatOwned[RecipeManager.instance.currentMat] += RefillMat;
+                    RecipeManager.instance.Material[RecipeManager.instance.currentMat].SetActive(true); 
+                }
+                //aggiungere evento UI
+                return BT_STATUS.RUNNING;                  
+            }
+            else
+            {
+                BT_STATUS _Chest = MoveTo(Chest[RecipeManager.instance.currentMat].position);
+                if(_Chest == BT_STATUS.SUCCESS)
+                {
+                    RecipeManager.instance.MatOwned[RecipeManager.instance.currentMat] -= RecipeManager.instance.MatNeeded[RecipeManager.instance.currentMat];
+                    if(RecipeManager.instance.MatOwned[RecipeManager.instance.currentMat] <= 0)
+                    {
+                        RecipeManager.instance.Material[RecipeManager.instance.currentMat].SetActive(false); 
+                    }
+                    //aggiungere evento UI
+                    hasMat = true;
+                }
+                return BT_STATUS.RUNNING;
+            }   
+        }
+        else
+        {
+
+            BT_STATUS _GoToWork = MoveTo(work.position);
+            if(_GoToWork == BT_STATUS.SUCCESS)           
+            {
+                //aggiungere evento placing mat
+                hasMat = false;
+                RecipeManager.instance.currentMat++;
+            }
+        }
+        
+        return BT_STATUS.RUNNING;
+    }
     private BT_STATUS GoToWork()
     {
         return MoveTo(start.position);
@@ -82,16 +138,17 @@ public class BT_CONTROLLER : MonoBehaviour
     private BT_STATUS GetTheOrder()
     {
         OnGetTheOrder?.Invoke();
+        RecipeManager.instance.currentMat = 0;
         return BT_STATUS.SUCCESS;
     }
     private BT_STATUS GetMat()
     {
-        return BT_STATUS.SUCCESS;
+        return MaterialCheck();
     }
-    private BT_STATUS Crafting()
-    {
-        return MoveTo(work.position);
-    }
+    // private BT_STATUS Crafting()
+    // {
+    //     return MoveTo(work.position);
+    // }
     private BT_STATUS Expedition()
     {
         return MoveTo(EXPEDITION.position);
