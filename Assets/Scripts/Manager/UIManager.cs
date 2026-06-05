@@ -82,9 +82,9 @@ public class UIManager : MonoBehaviour
         OrderMaterialText[1].text = "0";
         OrderMaterialText[2].text = "0";
     }
-    public void MainMenu()
+    public void quit()
     {
-        SceneManager.LoadScene("MainMenu");
+        Application.Quit();
     }
     public void reload()
     {
