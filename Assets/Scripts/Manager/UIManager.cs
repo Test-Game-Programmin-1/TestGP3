@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -6,7 +5,6 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    //public TextMesh[] OrderText;
     [SerializeField] TMP_Text[] OrderMaterialText;
     [SerializeField] TMP_Text[] MatOwnedText;
     [SerializeField] GameObject[] Order;
@@ -28,7 +26,7 @@ public class UIManager : MonoBehaviour
         RecipeManager.MaterialOwned += UpdateMatText;
         RecipeManager.OrderTV += OrderTV;
         BT_CONTROLLER.ResetOrder += OrderReset;
-    }
+    }        //i vari eventi richiesti per il funzionamento
     void OnDisable()
     {
         BT_CONTROLLER.OnEnergyUsage -= UpdateEnergyBar;
@@ -38,17 +36,17 @@ public class UIManager : MonoBehaviour
         BT_CONTROLLER.ResetOrder -= OrderReset;
     }
 
-    private void UpdateEnergyBar()
+    private void UpdateEnergyBar() //aggiorna la barra della energia a ui quando viene caricata o scaricata
     {
         EnergyBar.fillAmount = BT_CONTROLLER.instance.Energy / BT_CONTROLLER.instance.MaxEnergy;
     }
-    private void UpdateMatText()
+    private void UpdateMatText() //aggiorna i materiali che hai
     {
         MatOwnedText[0].text = RecipeManager.instance.MatOwned[0].ToString();
         MatOwnedText[1].text = RecipeManager.instance.MatOwned[1].ToString();
         MatOwnedText[2].text = RecipeManager.instance.MatOwned[2].ToString();
     }
-    private void OrderTV()
+    private void OrderTV()//funzione che porta a ui i materiali richiesti per la creazione di un oggetto
     {
         if(RecipeManager.instance.currentRecipe == 0)
         {
@@ -75,7 +73,7 @@ public class UIManager : MonoBehaviour
             return;
         }
     }
-    private void OrderReset()
+    private void OrderReset() //setta a zero la ui dove ci sono i materiali richiesti per la creazione di un oggetto prima che vengano cambiati di nuovo
     {
         Order[0].SetActive(false);
         Order[1].SetActive(false);

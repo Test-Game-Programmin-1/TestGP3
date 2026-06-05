@@ -7127,7 +7127,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 32.16, y: 14.87, z: -9.46}
-  m_LocalScale: {x: -15.85, y: 1, z: 1}
+  m_LocalScale: {x: 15.85, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 29750494}
@@ -7996,7 +7996,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 32.16, y: 14.87, z: -2.76}
-  m_LocalScale: {x: -15.85, y: 1, z: 1}
+  m_LocalScale: {x: 15.85, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 159866238}
@@ -9311,7 +9311,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 32.16, y: 14.87, z: 10.04}
-  m_LocalScale: {x: -15.85, y: 1, z: 1}
+  m_LocalScale: {x: 15.85, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1908650416}
@@ -9972,7 +9972,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 32.16, y: 14.87, z: 3.31}
-  m_LocalScale: {x: -15.85, y: 1, z: 1}
+  m_LocalScale: {x: 15.85, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 403255261}
@@ -15112,6 +15112,10 @@ PrefabInstance:
     - target: {fileID: 1917112236588757118, guid: c67209e2584b4ff4199ebffed5ade974, type: 3}
       propertyPath: m_Name
       value: Zona Riposo
+      objectReference: {fileID: 0}
+    - target: {fileID: 4909361304792739588, guid: c67209e2584b4ff4199ebffed5ade974, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 3.93
       objectReference: {fileID: 0}
     - target: {fileID: 5663109831036987023, guid: c67209e2584b4ff4199ebffed5ade974, type: 3}
       propertyPath: m_LocalPosition.x

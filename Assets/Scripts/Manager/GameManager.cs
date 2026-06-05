@@ -1,6 +1,6 @@
 using UnityEngine;
 public enum GameState
-{
+{ //enum che viene usato per impostare lo stato del GamePlay
     Playing,
     Paused,
     X2
@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
             instance = this;
         state = GameState.Playing;
     }
-    void Update()
+    void Update() //gestisce la time scale del gioco
     {
         if(state == GameState.Paused)
         {
@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 5;
         }
     }
-    public void X2()
+    public void X2() //funzioni per i bottoni in game
     {
         state = GameState.X2;
     }

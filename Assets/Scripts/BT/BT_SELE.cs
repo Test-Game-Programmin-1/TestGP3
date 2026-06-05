@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BT_SELE : BT_NODE
+public class BT_SELE : BT_NODE //il selector è comparabile alla logica del "or" perché se fallisce uno non influenza gli altri, quindi se avviene un Failure il resto rimane intatto
 {
     public BT_SELE(string n)
     {

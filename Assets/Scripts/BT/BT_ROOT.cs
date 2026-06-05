@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BT_ROOT : BT_NODE
+public class BT_ROOT : BT_NODE //Fa partire la logica
 {
     public BT_ROOT(string n)
     {

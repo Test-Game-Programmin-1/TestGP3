@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BT_LEAF : BT_NODE
+public class BT_LEAF : BT_NODE //azioni dell'albero che fanno avvenire il pensare, tick = stato
 {
     public delegate BT_STATUS tick();
     public tick processMetod;
@@ -12,13 +12,6 @@ public class BT_LEAF : BT_NODE
         NODENAME = n;
         processMetod = pm;
     }
-
-    public BT_LEAF(string v, BT_LEAF goToWork)
-    {
-        this.v = v;
-        this.goToWork = goToWork;
-    }
-
     public override BT_STATUS PROCESS()
     {
         if(processMetod != null)

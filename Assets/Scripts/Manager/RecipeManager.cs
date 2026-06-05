@@ -33,7 +33,7 @@ public class RecipeManager : MonoBehaviour
         }
             instance = this;
     }
-    void Start()
+    void Start() //setta al massimo i materiali che hanno le casse
     {
         MatOwned[0] = ChestMaxVolume;
         MatOwned[1] = ChestMaxVolume;
@@ -46,14 +46,14 @@ public class RecipeManager : MonoBehaviour
         BT_CONTROLLER.OnCrafting += Crafting;
         BT_CONTROLLER.OnExpedition += Expedition;
     }
-
+                                    //i vari eventi
     void OnDisable()
     {
         BT_CONTROLLER.OnGetTheOrder -= GetTheOrder;
         BT_CONTROLLER.OnCrafting -= Crafting;
         BT_CONTROLLER.OnExpedition -= Expedition;
     }
-    void Update()
+    void Update() //aggiorna il timer per la gestione della posizione dei lavori e dopo tot lo setta a false
     {
         if (placed)
         {
@@ -70,7 +70,7 @@ public class RecipeManager : MonoBehaviour
             placed = false;
         }
     }
-    private void GetTheOrder()
+    private void GetTheOrder() //funzione che con random range prende un ordine e dice i materiali che servono per quel ordine
     {
         currentRecipe = UnityEngine.Random.Range(0, Recipe.Length);
         Debug.Log("New Order: " + Recipe[currentRecipe].name);
@@ -97,13 +97,13 @@ public class RecipeManager : MonoBehaviour
             return;
         }
     }
-    private void Crafting()
+    private void Crafting() //funzione che setta a true l'ordine selezionato e lo sposta sulla working bench
     {
         GameObject Crafted = Recipe[currentRecipe];
         Crafted.transform.position = WorkBench.position;
         Crafted.SetActive(true);
     }
-    private void Expedition()
+    private void Expedition() //funzione che attiva il bool per la funzione del spostare e settare a false dopo tot e sposta l'oggetto sulla ExpeditionBench
     {
         GameObject Crafted = Recipe[currentRecipe];
         placed = true;

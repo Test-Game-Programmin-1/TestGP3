@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BT_SEQE : BT_NODE
+public class BT_SEQE : BT_NODE//il sequence è comparabile alla logica del "and" perché se fallisce uno influenza gli altri, quindi se avviene un Failure il resto non rimane intatto
 {
     public BT_SEQE(string n)
     {
