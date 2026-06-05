@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class RecipeManager : MonoBehaviour
@@ -20,6 +21,8 @@ public class RecipeManager : MonoBehaviour
     public bool placed = false;
 
     public int currentMat;
+    public static event Action MaterialOwned;
+    public static event Action OrderTV;
     public static RecipeManager instance;
     void Awake()
     {
@@ -35,7 +38,7 @@ public class RecipeManager : MonoBehaviour
         MatOwned[0] = ChestMaxVolume;
         MatOwned[1] = ChestMaxVolume;
         MatOwned[2] = ChestMaxVolume;
-        //aggiungere evento UI
+        MaterialOwned?.Invoke();
     }
     void OnEnable()
     {
@@ -69,8 +72,9 @@ public class RecipeManager : MonoBehaviour
     }
     private void GetTheOrder()
     {
-        currentRecipe = Random.Range(0, Recipe.Length);
+        currentRecipe = UnityEngine.Random.Range(0, Recipe.Length);
         Debug.Log("New Order: " + Recipe[currentRecipe].name);
+        OrderTV?.Invoke();
         if(currentRecipe == 0)
         {
             MatNeeded[0] = orderMat1[0];

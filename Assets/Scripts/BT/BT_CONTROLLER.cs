@@ -20,8 +20,8 @@ public class BT_CONTROLLER : MonoBehaviour
 
     [Header("sleep")]
     [SerializeField] bool isSleeping = true;
-    [SerializeField] float Energy;
-    [SerializeField] float MaxEnergy;
+    public float Energy;
+    public float MaxEnergy;
 
     BT_WORKINGSTATUS workingStatus = BT_WORKINGSTATUS.idle;
     BT_ROOT root;
@@ -30,6 +30,19 @@ public class BT_CONTROLLER : MonoBehaviour
     public static event Action OnGetTheOrder;
     public static event Action OnCrafting;
     public static event Action OnExpedition;
+    public static event Action OnEnergyUsage;
+    public static event Action OnQuantityLeft;
+    public static event Action ResetOrder;
+    public static BT_CONTROLLER instance;
+    void Awake()
+    {
+        if(instance != null)
+        {
+            Destroy(instance);
+            return;
+        }
+            instance = this;
+    }
     void Start()
     {
         Energy = MaxEnergy;
@@ -70,10 +83,12 @@ public class BT_CONTROLLER : MonoBehaviour
         if(isSleeping && Energy < MaxEnergy)
         {
             Energy += Time.deltaTime;
+            OnEnergyUsage?.Invoke();
         }
         else if(!isSleeping && Energy > 0)
         {
             Energy -= Time.deltaTime;
+            OnEnergyUsage?.Invoke();
         }
     }
     private BT_STATUS MoveTo(Vector3 Destination)
@@ -114,7 +129,7 @@ public class BT_CONTROLLER : MonoBehaviour
                     RecipeManager.instance.MatOwned[RecipeManager.instance.currentMat] += RefillMat;
                     RecipeManager.instance.Material[RecipeManager.instance.currentMat].SetActive(true); 
                 }
-                //aggiungere evento UI
+                OnQuantityLeft?.Invoke();
                 return BT_STATUS.RUNNING;                  
             }
             else
@@ -128,6 +143,7 @@ public class BT_CONTROLLER : MonoBehaviour
                         RecipeManager.instance.Material[RecipeManager.instance.currentMat].SetActive(false); 
                     }
                     //aggiungere evento UI
+                    OnQuantityLeft?.Invoke();
                     hasMat = true;
                 }
                 return BT_STATUS.RUNNING;
@@ -140,7 +156,6 @@ public class BT_CONTROLLER : MonoBehaviour
             if(_GoToWork == BT_STATUS.SUCCESS)           
             {
                 OnCrafting?.Invoke();
-                //aggiungere evento placing mat
                 hasMat = false;
                 RecipeManager.instance.currentMat++;
             }
@@ -174,6 +189,7 @@ public class BT_CONTROLLER : MonoBehaviour
     }
     private BT_STATUS EnergyCheck()
     {
+        ResetOrder?.Invoke();
         if (Energy <= 2f){return BT_STATUS.FAILURE;}
         else{return BT_STATUS.SUCCESS;}
     }
